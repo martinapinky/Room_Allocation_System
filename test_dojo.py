@@ -1,9 +1,10 @@
 import unittest
 
-from dojo.py import Dojo
-from office.py import Office
-from living_space.py import LivingSpace
-from fellow.py import Fellow
+from dojo import Dojo
+from office import Office
+from living_space import LivingSpace
+from fellow import Fellow
+from staff import Staff
 
 
 class TestCreateRoom(unittest.TestCase):
@@ -15,9 +16,19 @@ class TestCreateRoom(unittest.TestCase):
 
 	def test_create_livingspace_successfully(self):
 		number_of_livingspaces = len(LivingSpace.get_all_livingspaces)
-		new_livingspace = Dojo.create_livingspace("Uganda", "livingspace")
+		new_livingspace = Dojo.create_room("Uganda", "livingspace")
 		new_number_of_livingspaces = len(LivingSpace.get_all_livingspaces)
 		self.assertEqual(number_of_livingspaces + 1, new_number_of_livingspaces, msg='New livingspace Not Added')
+
+	def test_create_room_without_passing_arguments_unsuccessfully(self):
+		self.assertEqual(Dojo.create_room(), "Must specify set room_name and room_type", msg='Arguments not set')
+		self.assertEqual(Dojo.create_room("Uganda"), "Must specify set room_name and room_type", msg='Arguments not set')
+		self.assertEqual(Dojo.create_room("livingspace"), "Must specify set room_name and room_type", msg='Arguments not set')
+
+	def test_create_room_already_taken(self):
+		new_office = Dojo.create_room("MergeConflict", "office")
+		self.assertEqual(Dojo.create_room("MergeConflict", "office"), "MergeConflict already exists", msg='Room already exists')
+		self.assertEqual(Dojo.create_room("MergeConflict", "livingspace"), "MergeConflict already exists", msg='Room already exists')
 
 class TestAddPerson(uniitest.TestCase):
 	def test_add_fellow_successfully(self):
@@ -27,9 +38,9 @@ class TestAddPerson(uniitest.TestCase):
 		self.assertEqual(number_of_fellows + 1, new_number_of_fellows, msg='New fellow Not Added')
 
 	def test_add_staff_successfully(self):
-		number_of_staff = len(Fellow.get_all_staff)
+		number_of_staff = len(Staff.get_all_staff)
 		new_staff = Dojo.add_person("Maria", "staff")
-		new_number_of_staff = len(Fellow.get_all_staff)
+		new_number_of_staff = len(Staff.get_all_staff)
 		self.assertEqual(new_number_of_staff + 1, new_number_of_staff, msg='New staff Not Added')
 
 	def test_add_fellow_with_accommodation_successfully(self):
@@ -42,3 +53,4 @@ class TestAddPerson(uniitest.TestCase):
 	def test_add_staff_with_accommodation_unsuccessfully(self):
 		new_staff = Dojo.add_person("Maria", "staff", "Y")
 		self.assertEqual(new_staff, "No livingspaces for staff", msg='Staff cannot be allocated livingspace')
+
