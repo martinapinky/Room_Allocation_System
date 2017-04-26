@@ -1,5 +1,7 @@
 from office import Office
 from livingspace import LivingSpace
+from fellow import Fellow
+from staff import Staff
 import random
 
 class Dojo(object):
@@ -38,27 +40,33 @@ class Dojo(object):
 		else:
 			return False
 
-	def add_person(self, person_name, *person_type):
-		if person_type[0] == 'fellow':
-			new_fellow = Fellow()
-			self.fellows_added.append(new_fellow)
-		if person_type[0] == 'staff':
+	def add_person(self, person_name, person_type, *wants_accomodation):
+
+		if person_type == 'fellow':
+			if wants_accomodation and wants_accomodation[0] == 'Y':
+				new_fellow = Fellow(person_name, "fellow", random.choice(self.offices_created), random.choice(self.livingspaces_created))
+				self.fellows_added.append(new_fellow)
+			else:
+				new_fellow = Fellow(person_name, "fellow", random.choice(self.offices_created))
+				self.fellows_added.append(new_fellow)
+		if person_type == 'staff':
+			new_staff = Staff(person_name, "staff", random.choice(self.offices_created))
 			self.staff_added.append(new_staff)
 
 
 
 dojo = Dojo()
 # print(dojo.check_room_exists("Fox"))
-dojo.create_room("office", "One")
-dojo.create_room("office", "Two")
-dojo.create_room("office", "Three")
-dojo.create_room("office", "Four")
-dojo.create_room("office", "Five")
-dojo.create_room("livingspace", "Six")
-dojo.create_room("livingspace", "Seven")
-dojo.create_room("livingspace", "Eight")
-dojo.create_room("livingspace", "Nine")
-dojo.create_room("livingspace", "Ten")
+dojo.create_room("office", "Office1")
+dojo.create_room("office", "Office2")
+dojo.create_room("office", "Office3")
+dojo.create_room("office", "Office4")
+dojo.create_room("office", "Office5")
+dojo.create_room("livingspace", "livingspace1")
+dojo.create_room("livingspace", "livingspace2")
+dojo.create_room("livingspace", "livingspace3")
+dojo.create_room("livingspace", "livingspace4")
+dojo.create_room("livingspace", "livingspace5")
 # print(dojo.offices_created)
 
 room_list = dojo.livingspaces_created + dojo.offices_created
@@ -66,3 +74,16 @@ room_names = []
 for room in room_list:
 	room_names.append(room.name)
 print(room_names)
+dojo.add_person("Martina", "staff", "Y")
+
+for person in dojo.fellows_added:
+	if person.livingspace:
+		print((person.name, person.person_type, person.office.name, person.livingspace.name))
+	else:
+		print((person.name, person.person_type, person.office.name))
+
+for person in dojo.staff_added:
+	if person.livingspace:
+		print((person.name, person.person_type, person.office.name, person.livingspace.name))
+	else:
+		print((person.name, person.person_type, person.office.name))
