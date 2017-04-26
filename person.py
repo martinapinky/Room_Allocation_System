@@ -5,3 +5,5 @@ class Person(object):
 		self.name = name
 		self.person_type = person_type
 		self.office = office
+
+		
