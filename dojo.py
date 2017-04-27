@@ -13,7 +13,7 @@ class Dojo(object):
 		self.fellows_added = []
 		self.staff_added = []
 
-"""This method creates new rooms of type room_type and adds them to lists livingspaces_created and offices_created"""
+#This method creates new rooms of type room_type and adds them to lists livingspaces_created and offices_created
 	def create_room(self, room_type, *room_names):
 		if room_type is None or len(room_names) == 0: #if room_type and room_name arguments are not set
 			return "Must set room_name and room_type"
@@ -28,7 +28,7 @@ class Dojo(object):
 				else:
 					return room_name + " already exists"
 		
-"""This method checks if a room with name "name" was created already"""		
+#This method checks if a room with name "name" was created already		
 	def check_room_exists(self, name):
 		room_list = self.livingspaces_created + self.offices_created
 		room_names = []
@@ -42,7 +42,7 @@ class Dojo(object):
 		else:
 			return False
 
-"""This method adds a new person with name person_name and type person_type and adds them to lists fellows_added and staff_added"""
+#This method adds a new person with name person_name and type person_type and adds them to lists fellows_added and staff_added
 	def add_person(self, person_name, person_type, *wants_accomodation):
 		
 		if person_type == 'fellow' and self.offices_created and self.livingspaces_created:  #checks if person_type is fellow, and if lists livingspaces_created and offices_created are empty
