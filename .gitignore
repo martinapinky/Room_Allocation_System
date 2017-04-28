@@ -1,1 +1,7 @@
 VirtualEnvironment/
+.cache/
+__pycache__/
+mahad.py/
+index.py/
+app.py/
+main2.py/

@@ -3,4 +3,4 @@ from person import Person
 class Staff(Person):
 
 	def __init__(self, name, person_type, office):
-	 	Person.__init__(self, name, person_type, office) #inherits from class Person
+	 	Person.__init__(self, name, person_type, office) 

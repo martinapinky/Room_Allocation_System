@@ -1,5 +1,4 @@
-""" This example uses docopt with the built in cmd module
-
+""" 
 Usage:
 
     (dojo)

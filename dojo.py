@@ -13,24 +13,23 @@ class Dojo(object):
 		self.fellows_added = []
 		self.staff_added = []
 
-#This method creates new rooms of type room_type and adds them to lists livingspaces_created and offices_created
-	def create_room(self, room_type, *room_names):
-		if room_type is None or len(room_names) == 0: #if room_type and room_name arguments are not set
+	def create_room(self, room_type, room_name):
+		if room_type is None or room_name is None:
 			return "Must set room_name and room_type"
 		else:
-			for room_name in room_names:  #Loops through the tuple "room_names" passed
-				if self.check_room_exists(room_name) is False: #Checks if the room already exists
-					if room_type == 'office':
-						new_office = Office(room_type, room_name)    
-						self.offices_created.append(new_office)
-						return "An office called " + room_name + " has been successfully created!"     
-					if room_type == 'livingspace':
-						self.livingspaces_created.append(LivingSpace(room_type, room_name))
-						return "A livingspace called " + room_name + " has been successfully created!" 
-				else:
-					return room_name + " already exists"
-		
-#This method checks if a room with name "name" was created already	
+			if self.check_room_exists(room_name) is False:
+				if room_type == 'office':
+					new_office = Office(room_type, room_name)
+					self.offices_created.append(new_office)
+					return "An office called " + room_name + " has been successfully created!"
+				if room_type == 'livingspace':
+					new_livingspace = LivingSpace(room_type, room_name)
+					self.livingspaces_created.append(new_livingspace)
+					return "A livingspace called " + room_name + " has been successfully created!" 	
+			else:
+				return room_name + " already exists"
+				
+			
 	def check_room_exists(self, name):
 		room_list = self.livingspaces_created + self.offices_created
 		room_names = []
@@ -44,32 +43,49 @@ class Dojo(object):
 		else:
 			return False
 
-#This method adds a new person with name person_name and type person_type and adds them to lists fellows_added and staff_added
-	def add_person(self, person_name, person_type, *wants_accomodation):
-		
-		if person_type == 'fellow' and self.check_available_rooms("office") and self.check_available_rooms("livingspace"):  #checks if person_type is fellow, and if lists livingspaces_created and offices_created are empty
-			if wants_accomodation and wants_accomodation[0] == 'Y':
-				new_fellow = Fellow(person_name, "fellow", random.choice(self.offices_created), random.choice(self.livingspaces_created)) #adds a new fellow and assigns random office and living space
-				self.fellows_added.append(new_fellow)
-				new_fellow.office.number_of_occupants += 1
-				new_fellow.livingspace.number_of_occupants += 1
-				print((new_fellow.office.name, str(new_fellow.office.number_of_occupants)))
-			else:
-				new_fellow = Fellow(person_name, "fellow", random.choice(self.offices_created))
-				self.fellows_added.append(new_fellow)
-				new_fellow.office.number_of_occupants += 1
-				print((new_fellow.office.name, str(new_fellow.office.number_of_occupants)))
+	def add_person(self, person_name, person_type, wants_accomodation='N'):
+		random_office = None
+		random_livingspace = None
+		if self.get_available_rooms("office"):
+			random_office = random.choice(self.get_available_rooms("office"))
+		if self.get_available_rooms("livingspace"):
+			random_livingspace = random.choice(self.get_available_rooms("livingspace"))
 
-		if person_type == 'staff' and self.check_available_rooms("office"): #checks if person_type is staff and if lists livingspaces_created and offices_created are empty 
-			if wants_accomodation and wants_accomodation[0] == 'Y':
+		if person_type == 'fellow':
+			if wants_accomodation and wants_accomodation == 'Y':
+				new_fellow = Fellow(person_name, "fellow", random_office, random_livingspace)
+				self.fellows_added.append(new_fellow)
+				if random_office:
+					new_fellow.office.number_of_occupants += 1
+					print((new_fellow.office.name, str(new_fellow.office.number_of_occupants)))
+
+				if random_livingspace:
+					new_fellow.livingspace.number_of_occupants += 1
+				return 'Fellow ' + person_name + ' has successfully been added.'
+			
+			else:
+				new_fellow = Fellow(person_name, "fellow", random_office, None)
+				self.fellows_added.append(new_fellow)
+				if random_office:
+					new_fellow.office.number_of_occupants += 1
+					print((new_fellow.office.name, str(new_fellow.office.number_of_occupants)))
+
+				return 'Fellow ' + person_name + ' has successfully been added.'
+
+		if person_type == 'staff':
+			if wants_accomodation and wants_accomodation == 'Y':
 				return 'Staff cannot be allocated livingspace'
 			else:
-				new_staff = Staff(person_name, "staff", random.choice(self.offices_created)) #adds a new staff member and allocates random office
+				new_staff = Staff(person_name, "staff", random_office) 
 				self.staff_added.append(new_staff)
-				new_staff.office.number_of_occupants += 1
+				if random_office:
+					new_staff.office.number_of_occupants += 1
+					print((new_staff.office.name, str(new_staff.office.number_of_occupants)))
+
+				return 'Staff ' + person_name + ' has successfully been added.'
 
 
-	def check_available_rooms(self, room_type):
+	def get_available_rooms(self, room_type):
 		available_rooms = []
 
 		if room_type == 'livingspace':
@@ -85,13 +101,12 @@ class Dojo(object):
 		return available_rooms
 
 
-# dojo = Dojo()
-# # print(dojo.check_room_exists("Fox"))
-# print(dojo.create_room("office", "Office1"))
-# # dojo.create_room("office", "Office3")
-# # dojo.create_room("office", "Office4")
-# # dojo.create_room("office", "Office5")
-# print(dojo.create_room("livingspace", "livingspace1"))
+dojo = Dojo()
+# print(dojo.check_room_exists("Fox"))
+dojo.create_room("office", "Office1")
+# dojo.create_room("office", "Office4")
+# dojo.create_room("office", "Office5")
+print(dojo.create_room("livingspace", "livingspace1"))
 # # dojo.create_room("livingspace", "livingspace2")
 # # dojo.create_room("livingspace", "livingspace3")
 # # dojo.create_room("livingspace", "livingspace4")
@@ -104,11 +119,13 @@ class Dojo(object):
 # 	room_names.append(room.name)
 # print(room_names)
 
-# dojo.add_person("Martina", "fellow", "Y")
-# dojo.add_person("Simon", "fellow", "Y")
-# dojo.add_person("Benjamin", "fellow", "Y")
-# dojo.add_person("Cecilia", "fellow", "Y")
-# dojo.add_person("Collins", "fellow", "Y")
+dojo.add_person("Martina", "fellow")
+dojo.add_person("Simon", "fellow", "Y")
+dojo.add_person("Benjamin", "fellow")
+dojo.add_person("Cecilia", "fellow", "Y")
+dojo.add_person("Collins", "fellow", "Y")
+dojo.add_person("Arthur", "fellow")
+# print(dojo.get_available_rooms("livingspace"))
 
 # dojo.add_person("Maria", "staff")
 # dojo.add_person("Humaira", "staff", "Y")
