@@ -1,3 +1,4 @@
 VirtualEnvironment/
-.cache/
+/.cache/v/
+/.cache/
 __pycache__/
