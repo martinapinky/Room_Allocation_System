@@ -28,8 +28,7 @@ class Dojo(object):
 					return "A livingspace called " + room_name + " has been successfully created!" 	
 			else:
 				return room_name + " already exists"
-				
-			
+
 	def check_room_exists(self, name):
 		room_list = self.livingspaces_created + self.offices_created
 		room_names = []
@@ -54,6 +53,7 @@ class Dojo(object):
 		if person_type == 'fellow':
 			if wants_accomodation and wants_accomodation == 'Y':
 				new_fellow = Fellow(person_name, "fellow", random_office, random_livingspace)
+
 				self.fellows_added.append(new_fellow)
 				if random_office:
 					new_fellow.office.number_of_occupants += 1
